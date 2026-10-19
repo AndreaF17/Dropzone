@@ -95,6 +95,56 @@ dz -t s3cret   # or choose your own
 > During development, `dz --reload` restarts the server on code changes
 > (or run `uvicorn dropzone.server:app --reload` directly).
 
+## Usage
+
+```text
+usage: dz [-h] [-H HOST] [-p PORT] [-d DIR] [-t [TOKEN]] [--trust-proxy]
+          [--reload] [--no-color] [-v] [-V]
+```
+
+Run `dz --help` for the full option list (see the table above).
+
+### Common setups
+
+```bash
+dz                                   # open server on 0.0.0.0:8000, files in ./uploads
+dz -t                                # require a generated token (shown in the banner)
+dz -t s3cret -p 9001                 # your own token, custom port
+dz -H 127.0.0.1 -d ~/loot            # bind to localhost only, custom upload dir
+dz -t --trust-proxy                  # behind a reverse proxy (nginx, caddy, ...)
+dz -v                                # full uvicorn startup + access logs
+```
+
+### Example session
+
+Start the server with a generated token:
+
+```console
+$ dz -t
+  ...
+  [*] listening : http://0.0.0.0:8000
+  [*] storing   : /home/me/uploads/<client-ip>/
+  [*] auth      : bearer token required
+  [*] token     : uOdyF12TkI75iNaJGQjwYIfB
+  [*] received files are logged below; Ctrl-C to stop
+```
+
+From the other machine, send a file with that token:
+
+```bash
+curl -H "Authorization: Bearer uOdyF12TkI75iNaJGQjwYIfB" -F "file=@report.pdf" http://10.10.14.2:8000/upload
+# -> {"saved":"report.pdf","dir":"10.10.14.7","bytes":48213}
+```
+
+The server console shows what arrived (and any rejected attempts):
+
+```text
+14:43:04 WARN  dropzone: deny 10.10.14.7      missing token
+14:43:09 INFO  dropzone: recv 10.10.14.7      report.pdf      48213 bytes -> /home/me/uploads/10.10.14.7/report.pdf
+```
+
+Stop with `Ctrl-C`; files stay in `uploads/<client-ip>/`.
+
 ## Uploading
 
 ### Browser
