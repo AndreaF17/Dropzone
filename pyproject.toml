@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dropzone"
+version = "0.1.0"
+description = "A FastAPI file-upload server for a lab, with a cyberpunk web UI and a CLI."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "python-multipart>=0.0.9",
+]
+
+[project.scripts]
+dz = "dropzone.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dropzone"]
