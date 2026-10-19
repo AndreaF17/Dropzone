@@ -15,7 +15,7 @@ Requires Python 3.10+. Installing puts a `dz` command on your `PATH`.
 environment:
 
 ```bash
-pipx install git+https://github.com/AndreaF17/Exfil-Tool.git
+pipx install git+https://github.com/AndreaF17/dropzone.git
 # or, from a local checkout:
 pipx install .
 ```
@@ -29,7 +29,7 @@ Inside a virtual environment:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install git+https://github.com/AndreaF17/Exfil-Tool.git
+pip install git+https://github.com/AndreaF17/dropzone.git
 # or, from a local checkout:
 pip install .
 ```
