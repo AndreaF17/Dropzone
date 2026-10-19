@@ -5,6 +5,8 @@ them in a local directory. Works from a browser, `curl`, and PowerShell.
 
 > Use only against machines and networks you own or are explicitly authorized to test.
 
+![DropZone upload page](docs/images/upload-page.png)
+
 ## Install
 
 Requires Python 3.10+. Installing puts a `dz` command on your `PATH`.
@@ -50,6 +52,8 @@ dz                               # or: python -m dropzone / python3 ./main.py
 ```
 
 Then open <http://localhost:8000/> for the upload page.
+
+![dz startup banner and upload log](docs/images/cli.png)
 
 ### Command-line options
 
@@ -150,6 +154,9 @@ Stop with `Ctrl-C`; files stay in `uploads/<client-ip>/`.
 ### Browser
 
 Open `/`, drag files in (or click **browse**), optionally enter the token, hit **SEND**.
+Each file gets its own progress bar:
+
+![Browser upload with per-file progress](docs/images/upload-done.png)
 
 ### curl — multipart form
 
