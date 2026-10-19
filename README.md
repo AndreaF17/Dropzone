@@ -1,4 +1,4 @@
-# Drop
+# DropZone
 
 A small FastAPI server for a lab that accepts file uploads over HTTP and stores
 them in a local directory. Works from a browser, `curl`, and PowerShell.
