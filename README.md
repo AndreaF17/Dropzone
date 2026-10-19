@@ -5,23 +5,72 @@ them in a local directory. Works from a browser, `curl`, and PowerShell.
 
 > Use only against machines and networks you own or are explicitly authorized to test.
 
-## Setup
+## Install
+
+Requires Python 3.10+. Installing puts a `dz` command on your `PATH`.
+
+### pipx (recommended)
+
+[pipx](https://pipx.pypa.io/) installs the tool into its own isolated
+environment:
+
+```bash
+pipx install git+https://github.com/AndreaF17/Exfil-Tool.git
+# or, from a local checkout:
+pipx install .
+```
+
+Upgrade with `pipx upgrade dropzone`, remove with `pipx uninstall dropzone`.
+
+### pip
+
+Inside a virtual environment:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install git+https://github.com/AndreaF17/Exfil-Tool.git
+# or, from a local checkout:
+pip install .
+```
+
+### From source (no install)
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
+python3 ./main.py                # same options as dz
 ```
 
 ## Run
 
 ```bash
-python3 ./main.py
+dz                               # or: python -m dropzone / python3 ./main.py
 ```
 
 Then open <http://localhost:8000/> for the upload page.
 
-### Options (environment variables)
+### Command-line options
+
+| Flag                  | Default    | Meaning                                                        |
+|-----------------------|------------|----------------------------------------------------------------|
+| `-H, --host HOST`     | `0.0.0.0`  | Interface to bind.                                             |
+| `-p, --port PORT`     | `8000`     | Port to listen on.                                             |
+| `-d, --dir DIR`       | `uploads`  | Directory where received files are written.                    |
+| `-t, --token [TOKEN]` | *(none)*   | Require a bearer token; with no value one is generated.        |
+| `--trust-proxy`       | off        | Use `X-Forwarded-For` for the client IP (behind a proxy only). |
+| `-v, --verbose`       | off        | Also show uvicorn startup and per-request access logs.         |
+| `--no-color`          | off        | Disable colored output (also `NO_COLOR=1`).                    |
+| `--reload`            | off        | Auto-reload on code changes (development).                     |
+| `-V, --version`       |            | Print the version and exit.                                    |
+
+By default the console only shows received files, rejected uploads (missing
+or wrong token) and errors.
+
+### Environment variables
+
+Each flag's default can also be set from the environment:
 
 | Variable     | Default   | Meaning                                              |
 |--------------|-----------|------------------------------------------------------|
@@ -32,25 +81,25 @@ Then open <http://localhost:8000/> for the upload page.
 | `TRUST_PROXY`| *(unset)* | `1` to trust `X-Forwarded-For` (behind a proxy only). |
 
 ```bash
-PORT=9001 UPLOAD_DIR=/data/incoming AUTH_TOKEN=s3cret python3 ./main.py
+PORT=9001 UPLOAD_DIR=/data/incoming AUTH_TOKEN=s3cret dz
 ```
 
 Pass `-t` with no value to generate a random token; it is printed in the
 startup banner so you can copy it:
 
 ```bash
-python3 ./main.py -t          # -> [*] token : 3q9V...
-python3 ./main.py -t s3cret   # or choose your own
+dz -t          # -> [*] token : 3q9V...
+dz -t s3cret   # or choose your own
 ```
 
-> Prefer `uvicorn dropzone.server:app --host 0.0.0.0 --port 8000` if you want auto-reload
-> during development (`--reload`).
+> During development, `dz --reload` restarts the server on code changes
+> (or run `uvicorn dropzone.server:app --reload` directly).
 
 ## Uploading
 
 ### Browser
 
-Open `/`, drag files in (or click **browse**), optionally enter the token, hit **Upload**.
+Open `/`, drag files in (or click **browse**), optionally enter the token, hit **SEND**.
 
 ### curl — multipart form
 
